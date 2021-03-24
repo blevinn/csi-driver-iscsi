@@ -29,7 +29,7 @@ import (
 	"k8s.io/utils/mount"
 )
 
-func getISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
+func GetISCSIInfo(req *csi.NodePublishVolumeRequest) (*iscsiDisk, error) {
 	volName := req.GetVolumeId()
 	tp := req.GetVolumeContext()["targetPortal"]
 	iqn := req.GetVolumeContext()["iqn"]
@@ -116,7 +116,7 @@ func buildISCSIConnector(iscsiInfo *iscsiDisk) *iscsi_lib.Connector {
 	return &c
 }
 
-func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest) *iscsiDiskMounter {
+func GetISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest) *iscsiDiskMounter {
 	readOnly := req.GetReadonly()
 	fsType := req.GetVolumeCapability().GetMount().GetFsType()
 	mountOptions := req.GetVolumeCapability().GetMount().GetMountFlags()
@@ -134,7 +134,7 @@ func getISCSIDiskMounter(iscsiInfo *iscsiDisk, req *csi.NodePublishVolumeRequest
 	}
 }
 
-func getISCSIDiskUnmounter(req *csi.NodeUnpublishVolumeRequest) *iscsiDiskUnmounter {
+func GetISCSIDiskUnmounter(req *csi.NodeUnpublishVolumeRequest) *iscsiDiskUnmounter {
 	return &iscsiDiskUnmounter{
 		iscsiDisk: &iscsiDisk{
 			VolName: req.GetVolumeId(),

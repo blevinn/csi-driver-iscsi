@@ -28,11 +28,11 @@ type nodeServer struct {
 }
 
 func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublishVolumeRequest) (*csi.NodePublishVolumeResponse, error) {
-	iscsiInfo, err := getISCSIInfo(req)
+	iscsiInfo, err := GetISCSIInfo(req)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	diskMounter := getISCSIDiskMounter(iscsiInfo, req)
+	diskMounter := GetISCSIDiskMounter(iscsiInfo, req)
 
 	util := &ISCSIUtil{}
 	_, err = util.AttachDisk(*diskMounter)
@@ -44,7 +44,7 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 }
 
 func (ns *nodeServer) NodeUnpublishVolume(ctx context.Context, req *csi.NodeUnpublishVolumeRequest) (*csi.NodeUnpublishVolumeResponse, error) {
-	diskUnmounter := getISCSIDiskUnmounter(req)
+	diskUnmounter := GetISCSIDiskUnmounter(req)
 	targetPath := req.GetTargetPath()
 
 	iscsiutil := &ISCSIUtil{}
